@@ -11,4 +11,5 @@ public:
     virtual void setStatsModel(StatsKeyValueModel const& model) = 0;
     virtual bool isSaved() const = 0;
     virtual void setIsSaved() = 0;
+    virtual bool isModified() const = 0;
 };

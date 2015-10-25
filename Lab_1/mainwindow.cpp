@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <QMessageBox>
 #include <QResizeEvent>
+#include <QSortFilterProxyModel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,9 +18,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->setupUi(this);
 
     m_tableModel = std::make_shared<StatsTableModel>();
-    m_ui->tableData->setModel(m_tableModel.get());
+
+    QSortFilterProxyModel * proxySort = new QSortFilterProxyModel();
+    proxySort->setSourceModel(m_tableModel.get());
+
     m_ui->tableData->setAlternatingRowColors(true);
     m_ui->tableData->setSortingEnabled(true);
+
+    m_ui->tableData->setModel(proxySort);
+    proxySort->setSortCaseSensitivity(Qt::CaseInsensitive);
+
 
     m_ui->newDocument->setShortcut(QKeySequence(QKeySequence::New));
     m_ui->openDocument->setShortcut(QKeySequence(QKeySequence::Open));
