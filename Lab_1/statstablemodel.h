@@ -28,8 +28,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    bool isModified() const;
 
 private:
+    bool m_isModified = false;
     bool m_isSaved = false;
     StatsKeyValueModel m_statsModel;
 };

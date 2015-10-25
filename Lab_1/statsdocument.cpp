@@ -45,8 +45,19 @@ bool StatsDocument::open()
 
 bool StatsDocument::save()
 {
-    // TODO: implement me.
-    return false;
+    if (this->savePath.isEmpty())
+    {
+        return saveAs();
+    }
+
+    QFileInfo checkFile(this->savePath);
+    if (!checkFile.exists() && !checkFile.isDir())
+    {
+        return false;
+    }
+
+    StatsSerializer serializer(savePath);
+    return serializer.save(m_provider.statsModel());
 }
 
 bool StatsDocument::saveAs()
@@ -57,19 +68,24 @@ bool StatsDocument::saveAs()
         return false;
     }
     StatsSerializer serializer(savePath);
-    return serializer.save(m_provider.statsModel());
+    bool success = serializer.save(m_provider.statsModel());
+    if (success)
+    {
+        this->savePath = savePath;
+    }
+    return success;
 }
 
 QString StatsDocument::selectSavePath() const
 {
-    QString fromDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString fromDir = (this->savePath.isEmpty()) ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : this->savePath;
     auto parentWindow = qobject_cast<QWidget *>(parent());
     return QFileDialog::getSaveFileName(parentWindow, QString(), fromDir, FILE_FORMAT_FILTER);
 }
 
 QString StatsDocument::selectOpenPath() const
 {
-    QString fromDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString fromDir = (this->savePath.isEmpty()) ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : this->savePath;
     auto parentWindow = qobject_cast<QWidget *>(parent());
     return QFileDialog::getOpenFileName(parentWindow, QString(), fromDir, FILE_FORMAT_FILTER);
 }

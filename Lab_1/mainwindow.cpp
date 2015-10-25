@@ -110,3 +110,25 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QRect tableArea = QRect(QPoint(0, 0), event->size());
     m_ui->tableData->setGeometry(tableArea);
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (m_tableModel->isModified())
+    {
+        QMessageBox::StandardButton ret;
+        ret = QMessageBox::warning(this, tr("Application"),
+                     tr("The document has been modified.\n"
+                        "Do you want to save your changes?"),
+                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        if (ret == QMessageBox::Save)
+        {
+            bool docSaved = m_document->save();
+            if (!docSaved)
+            {
+                event->ignore();
+            }
+        }
+        else if (ret == QMessageBox::Cancel)
+            event->ignore();
+    }
+}

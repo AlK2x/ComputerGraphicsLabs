@@ -41,4 +41,5 @@ private:
     // QWidget interface
 protected:
     void resizeEvent(QResizeEvent *);
+    void closeEvent(QCloseEvent *);
 };

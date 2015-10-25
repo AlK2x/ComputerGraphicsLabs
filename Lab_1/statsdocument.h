@@ -21,6 +21,7 @@ public:
 private:
     QString selectSavePath() const;
     QString selectOpenPath() const;
+    QString savePath;
 
     IStatsModelProvider &m_provider;
 };

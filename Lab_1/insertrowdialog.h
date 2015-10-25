@@ -20,8 +20,13 @@ signals:
 
 private slots:
     void onAccepted();
+    void onNameChanged(QString value);
+    void onValueChanged(int value);
 
 private:
+    bool isNameCorrect(QString name);
+    bool isValueCorrect(int value);
+
     Ui::InsertRowDialog *ui;
 };
 
