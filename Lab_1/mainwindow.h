@@ -3,6 +3,8 @@
 #include <QMainWindow>
 #include <QString>
 #include <memory>
+#include <QUndoStack>
+
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +32,7 @@ private slots:
 
     void on_actionInsertRow_triggered();
     void onRowReady(QString text, int value);
+    void onEditRow(int row, QString text, int value);
 
     void on_actionDeleteRow_triggered();
 
@@ -37,6 +40,11 @@ private:
     Ui::MainWindow *m_ui;
     std::shared_ptr<StatsTableModel> m_tableModel;
     std::unique_ptr<StatsDocument> m_document;
+    QUndoStack *m_undoStack;
+
+    QAction *m_undoAction;
+    QAction *m_redoAction;
+
 
     // QWidget interface
 protected:

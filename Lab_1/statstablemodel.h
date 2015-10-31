@@ -19,7 +19,9 @@ public:
     void setStatsModel(StatsKeyValueModel const& statsModel) override;
     bool isSaved() const override;
     void setIsSaved() override;
-    bool isModified() const override;
+
+signals:
+    void editRow(int row, QString text, int value);
 
     // QAbstractItemModel interface
 public:
@@ -32,7 +34,6 @@ public:
 
 
 private:
-    bool m_isModified = false;
     bool m_isSaved = false;
     StatsKeyValueModel m_statsModel;
 };

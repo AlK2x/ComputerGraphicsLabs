@@ -10,12 +10,17 @@
 #include <QMessageBox>
 #include <QResizeEvent>
 #include <QSortFilterProxyModel>
+#include "insertrowcommand.h"
+#include "deleterowcommand.h"
+#include "editcommand.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow)
 {
     m_ui->setupUi(this);
+
+    m_undoStack = new QUndoStack(this);
 
     m_tableModel = std::make_shared<StatsTableModel>();
 
@@ -35,6 +40,17 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->saveDocumentAs->setShortcut(QKeySequence(QKeySequence::SaveAs));
     m_ui->actionInsertRow->setShortcut(QKeySequence(QKeySequence(Qt::Key_Insert)));
     m_ui->actionDeleteRow->setShortcut(QKeySequence(QKeySequence::Delete));
+
+    m_undoAction = m_undoStack->createUndoAction(this, tr("&Undo"));
+    m_undoAction->setShortcuts(QKeySequence::Undo);
+
+    m_redoAction = m_undoStack->createRedoAction(this, tr("&Redo"));
+    m_redoAction->setShortcuts(QKeySequence::Redo);
+
+    m_ui->menu->addAction(m_undoAction);
+    m_ui->menu->addAction(m_redoAction);
+
+    connect(m_tableModel.get(), SIGNAL(editRow(int, QString, int)), this, SLOT(onEditRow(int, QString, int)));
 
     m_document.reset(new StatsDocument(this, *m_tableModel));
 }
@@ -87,9 +103,12 @@ void MainWindow::on_actionInsertRow_triggered()
 
 void MainWindow::onRowReady(QString text, int value)
 {
-    auto model = m_tableModel->statsModel();
-    model.append(text, value);
-    m_tableModel->setStatsModel(model);
+    m_undoStack->push(new InsertRowCommand(*m_tableModel, text, value));
+}
+
+void MainWindow::onEditRow(int row, QString text, int value)
+{
+    m_undoStack->push(new EditCommand(*m_tableModel, row, text, value));
 }
 
 void MainWindow::on_actionDeleteRow_triggered()
@@ -101,16 +120,7 @@ void MainWindow::on_actionDeleteRow_triggered()
     }
 
     auto statsModel = m_tableModel->statsModel();
-    StatsKeyValueModel newModel;
-    for (size_t i = 0, n = statsModel.size(); i < n; ++i)
-    {
-        if (deletedRows.count(i))
-        {
-            continue;
-        }
-        newModel.append(statsModel.key(i), statsModel.value(i));
-    }
-    m_tableModel->setStatsModel(newModel);
+    m_undoStack->push(new DeleteRowCommand(*m_tableModel, deletedRows));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -121,7 +131,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (m_tableModel->isModified())
+    if (m_undoStack->canUndo())
     {
         QMessageBox::StandardButton ret;
         ret = QMessageBox::warning(this, tr("Application"),

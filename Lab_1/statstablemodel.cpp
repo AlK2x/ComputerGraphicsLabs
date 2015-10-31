@@ -18,7 +18,6 @@ StatsTableModel::StatsTableModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
     m_statsModel.setSampleValues();
-    m_isModified = false;
     m_isSaved = false;
 }
 
@@ -32,7 +31,6 @@ void StatsTableModel::setStatsModel(const StatsKeyValueModel &statsModel)
     emit layoutAboutToBeChanged();
     m_statsModel = statsModel;
     m_isSaved = true;
-    m_isModified = true;
     emit layoutChanged();
 }
 
@@ -43,7 +41,6 @@ bool StatsTableModel::isSaved() const
 
 void StatsTableModel::setIsSaved()
 {
-    m_isModified = false;
     m_isSaved = true;
 }
 
@@ -111,22 +108,16 @@ bool StatsTableModel::setData(const QModelIndex &index, const QVariant &value, i
         switch (index.column())
         {
         case COLUMN_ID_NAME:
-            m_isModified = true;
-            m_statsModel.setKey(index.row(), value.toString());
+            emit editRow(index.row(), value.toString(), m_statsModel.value(index.row()));
             return true;
         case COLUMN_ID_VALUE:
-            m_isModified = true;
-            m_statsModel.setValue(index.row(), value.toInt());
+            emit editRow(index.row(), m_statsModel.key(index.row()), value.toInt());
             return true;
         default:
             break;
         }
     }
-    m_isModified = true;
-    return QAbstractTableModel::setData(index, value, role);
-}
+    bool result = QAbstractTableModel::setData(index, value, role);
 
-bool StatsTableModel::isModified() const
-{
-    return m_isModified;
+    return result;
 }
