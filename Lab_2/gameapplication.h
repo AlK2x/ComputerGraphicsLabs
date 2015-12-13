@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include <QGuiApplication>
 #include "ui/window3d.h"
 

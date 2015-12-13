@@ -4,6 +4,8 @@
 #include <QVector3D>
 #include <QSize>
 #include <stdint.h>
+#include <ui/imovecontroller.h>
+#include <QDebug>
 
 /// Static camera, can be manually controlled.
 class SceneCamera : public QObject
@@ -26,6 +28,9 @@ public:
     void setSpeed(QVector3D speed);
     QVector3D speed() const;
 
+    void setMoveController(IMoveController *moveController);
+    void swapMoveController(IMoveController *moveController);
+
 protected:
 
 
@@ -35,4 +40,5 @@ private:
     QVector3D m_front; /**< Front direction */
     QVector3D m_up;    /**< Up direction */
     QVector3D m_speed; /**< Speed, meters per second, front/left/up */
+    IMoveController *m_moveController;
 };

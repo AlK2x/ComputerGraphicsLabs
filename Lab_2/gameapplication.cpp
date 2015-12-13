@@ -1,6 +1,7 @@
 #include "gameapplication.h"
 #include "gl/scenenode.h"
 #include "nodes/coloredcube.h"
+#include "ui/rotatemovecontroller.h"
 
 const QSize FIXED_WINDOW_SIZE(800, 600);
 
@@ -25,6 +26,7 @@ void GameApplication::loadScene()
     auto scene = std::make_shared<BaseScene>();
     scene->camera().setViewport(m_window.size());
     scene->camera().lookAt(QVector3D(6, 3, 6), QVector3D(0, 0, 0), QVector3D(0, 0, 1));
+    scene->camera().setMoveController(scene->getCurrentMoveController());
     new ColoredCube(scene.get());
     m_window.pushScene(scene);
 }

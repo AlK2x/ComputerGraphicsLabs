@@ -2,6 +2,7 @@
 
 #include "scenenode.h"
 #include "scenecamera.h"
+#include "../ui/imovecontroller.h"
 #include <QColor>
 
 class BaseScene : public SceneNode
@@ -24,7 +25,14 @@ public:
     SceneCamera &camera();
     SceneCamera const& camera() const;
 
+    IMoveController * getCurrentMoveController();
+    void swapMoveControllers();
+    void getKeyboardEvent(QKeyEvent *event, bool pressed);
+    void getMouseEvent(QMouseEvent *event, bool pressed);
+
 private:
     SceneCamera m_camera;
     QColor m_clearColor;
+    IMoveController *m_secondMoveController;
+    IMoveController *m_currentMoveController;
 };

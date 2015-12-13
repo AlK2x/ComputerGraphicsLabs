@@ -3,7 +3,7 @@
 #include <QDebug>
 
 namespace {
-void setOpenGLMatrix(const float *matrix, GLint mode)
+void    setOpenGLMatrix(const float *matrix, GLint mode)
 {
     GLint oldMode = 0;
     glGetIntegerv(GL_MATRIX_MODE, &oldMode);

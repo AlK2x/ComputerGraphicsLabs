@@ -12,6 +12,7 @@ void SceneCamera::loadMatrix()
 {
     QMatrix4x4 matrix;
     matrix.lookAt(m_eye, m_eye + m_front, m_up);
+    m_moveController->transformLoadMatrix(matrix);
     GLHelper::setModelViewMatrix(matrix);
 }
 
@@ -58,4 +59,20 @@ void SceneCamera::setSpeed(QVector3D speed)
 QVector3D SceneCamera::speed() const
 {
     return m_speed;
+}
+
+void SceneCamera::setMoveController(IMoveController *moveController)
+{
+    m_moveController = moveController;
+    m_moveController->saveCameraPosition(m_eye, m_front, m_up);
+}
+
+void SceneCamera::swapMoveController(IMoveController *moveController)
+{
+    moveController->saveCameraPosition(m_eye, m_front, m_up);
+    m_moveController = moveController;
+
+    m_eye = m_moveController->getEye();
+    m_front = m_moveController->getFront();
+    m_up = m_moveController->getUp();
 }

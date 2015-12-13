@@ -31,7 +31,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
-
+    void keyPressEvent(QKeyEvent *event) override;
 private slots:
     void deferRender();
     void render();
@@ -40,8 +40,7 @@ private slots:
     void updateScene(BaseScene &scene);
 
 private:
-    void rotateZ(QVector3D &eye, float rad);
-    void rotateY(QVector3D &eye, float rad);
+
 
     QTime m_updateTime;
     bool m_canRender = false;

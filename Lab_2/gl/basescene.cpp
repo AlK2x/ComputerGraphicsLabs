@@ -2,6 +2,8 @@
 #include <QColor>
 #include <qopengl.h>
 #include "glhelper.h"
+#include <ui/freemovecontroller.h>
+#include <ui/rotatemovecontroller.h>
 
 static float Z_NEAR = 0.02;
 static float Z_FAR = 50.0;
@@ -10,6 +12,8 @@ BaseScene::BaseScene(QSize viewportSize)
     : SceneNode()
     , m_camera(viewportSize)
     , m_clearColor(Qt::white)
+    , m_secondMoveController(new FreeMoveController())
+    , m_currentMoveController(new RotateMoveController())
 {
 }
 
@@ -84,3 +88,25 @@ const SceneCamera &BaseScene::camera() const
     return m_camera;
 }
 
+IMoveController *BaseScene::getCurrentMoveController()
+{
+    return m_currentMoveController;
+}
+
+void BaseScene::swapMoveControllers()
+{
+    IMoveController *tmp = m_secondMoveController;
+    m_secondMoveController = m_currentMoveController;
+    m_currentMoveController = tmp;
+    m_camera.swapMoveController(m_currentMoveController);
+}
+
+void BaseScene::getKeyboardEvent(QKeyEvent *event, bool pressed)
+{
+    m_currentMoveController->handleKeyboardEvent(event);
+}
+
+void BaseScene::getMouseEvent(QMouseEvent *event, bool pressed)
+{
+    m_currentMoveController->handleMouseEvent(event);
+}

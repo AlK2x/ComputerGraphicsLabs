@@ -3,6 +3,8 @@
 #include <QPainter>
 #include <QGuiApplication>
 #include <QDebug>
+#include "ui/freemovecontroller.h"
+#include "ui/rotatemovecontroller.h"
 
 Window3D::Window3D(QWindow *parent)
     : QWindow(parent)
@@ -53,59 +55,42 @@ bool Window3D::event(QEvent *event)
 
 void Window3D::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton)
+    if (!m_sceneStack.empty())
     {
-        float dx = event->x();
-        float dy = event->y();
-        m_x = event->x();
-        m_y = event->y();
-
-        auto scene = m_sceneStack.back();
-        m_sceneStack.pop_back();
-        QVector3D eye(scene->camera().eye());
-
-        float radian = dx * PI / 180;
-        rotateZ(eye, radian);
-        //rotateY(eye, dy * PI / 180);
-        qDebug() << eye << "\n";
-        scene->camera().lookAt(eye, QVector3D(0, 0, 0), QVector3D(0, 0, 1));
-        m_sceneStack.push_back(scene);
-        render();
+        m_sceneStack.back()->getMouseEvent(event, true);
     }
-}
-
-void Window3D::rotateZ(QVector3D &eye, float rad)
-{
-    float r = sqrt(eye.x() * eye.x() + eye.y() * eye.y());
-    float newX = r * cos(rad);
-    float newY = r * sin(rad);
-
-    eye.setX(newX);
-    eye.setY(newY);
-    eye.setZ(eye.z());
-}
-
-void Window3D::rotateY(QVector3D &eye, float rad)
-{
-    float r = sqrt(eye.x() * eye.x() + eye.z() * eye.z());
-    float newX = r * cos(rad);
-    float newZ = r * sin(rad);
-
-    eye.setX(newX);
-    eye.setY(eye.y());
-    eye.setZ(newZ);
-}
-
-void Window3D::mouseReleaseEvent(QMouseEvent *event)
-{
-    m_x = 0;
-    m_y = 0;
 }
 
 void Window3D::mousePressEvent(QMouseEvent *event)
 {
-    m_x = event->x() / 50.0;
-    m_y = event->y() / 50.0;
+    if (!m_sceneStack.empty())
+    {
+        m_sceneStack.back()->getMouseEvent(event, true);
+    }
+}
+
+void Window3D::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (!m_sceneStack.empty())
+    {
+        m_sceneStack.back()->getMouseEvent(event, false);
+    }
+}
+
+void Window3D::keyPressEvent(QKeyEvent *event)
+{
+    QWindow::keyPressEvent(event);
+    if (!m_sceneStack.empty())
+    {
+        if (event->key() == Qt::Key_Tab)
+        {
+            m_sceneStack.back()->swapMoveControllers();
+        }
+        else
+        {
+            m_sceneStack.back()->getKeyboardEvent(event, true);
+        }
+    }
 }
 
 void Window3D::exposeEvent(QExposeEvent *event)
