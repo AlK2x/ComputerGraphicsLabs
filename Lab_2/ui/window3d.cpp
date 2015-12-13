@@ -55,26 +55,24 @@ bool Window3D::event(QEvent *event)
 
 void Window3D::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!m_sceneStack.empty())
+    if (!m_sceneStack.empty() && m_handleEvents)
     {
-        m_sceneStack.back()->getMouseEvent(event, true);
+        m_sceneStack.back()->getMouseEvent(event);
     }
 }
 
 void Window3D::mousePressEvent(QMouseEvent *event)
 {
-    if (!m_sceneStack.empty())
-    {
-        m_sceneStack.back()->getMouseEvent(event, true);
-    }
+    m_handleEvents = true;
 }
 
 void Window3D::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (!m_sceneStack.empty())
+    if (!m_sceneStack.empty() && m_handleEvents)
     {
-        m_sceneStack.back()->getMouseEvent(event, false);
+        m_sceneStack.back()->stopMoving();
     }
+    m_handleEvents = false;
 }
 
 void Window3D::keyPressEvent(QKeyEvent *event)
@@ -88,8 +86,16 @@ void Window3D::keyPressEvent(QKeyEvent *event)
         }
         else
         {
-            m_sceneStack.back()->getKeyboardEvent(event, true);
+            m_sceneStack.back()->getKeyboardEvent(event);
         }
+    }
+}
+
+void Window3D::wheelEvent(QWheelEvent *event)
+{
+    if (!m_sceneStack.empty())
+    {
+        m_sceneStack.back()->getCurrentMoveController()->handleWheelEvent(event);
     }
 }
 

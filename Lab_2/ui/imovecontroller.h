@@ -18,6 +18,8 @@ public:
     virtual void handleMouseEvent(QMouseEvent *event) = 0;
     virtual void handleKeyboardEvent(QKeyEvent *event) = 0;
     virtual void transformLoadMatrix(QMatrix4x4 &matrix) = 0;
+    virtual void stopMoving() = 0;
+    void handleWheelEvent(QWheelEvent *event);
 
     void saveCameraPosition(QVector3D const &eye, QVector3D const &at, QVector3D const &up);
     QVector3D getEye() const;
@@ -32,6 +34,7 @@ protected:
     QVector3D m_eye;   /**< Eye position */
     QVector3D m_front; /**< Front direction */
     QVector3D m_up;    /**< Up direction */
+    float m_wheelFactor = 1.0;
 };
 
 #endif // IMOVECONTROLLER_H

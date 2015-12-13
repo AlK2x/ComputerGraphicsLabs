@@ -101,12 +101,17 @@ void BaseScene::swapMoveControllers()
     m_camera.swapMoveController(m_currentMoveController);
 }
 
-void BaseScene::getKeyboardEvent(QKeyEvent *event, bool pressed)
+void BaseScene::getKeyboardEvent(QKeyEvent *event)
 {
     m_currentMoveController->handleKeyboardEvent(event);
 }
 
-void BaseScene::getMouseEvent(QMouseEvent *event, bool pressed)
+void BaseScene::getMouseEvent(QMouseEvent *event)
 {
     m_currentMoveController->handleMouseEvent(event);
+}
+
+void BaseScene::stopMoving()
+{
+    m_currentMoveController->stopMoving();
 }

@@ -24,6 +24,7 @@ public:
 
     bool event(QEvent *) override;
 
+
 protected:
     void exposeEvent(QExposeEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -32,6 +33,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *) override;
 private slots:
     void deferRender();
     void render();
@@ -48,6 +50,5 @@ private:
     std::vector<std::shared_ptr<BaseScene>> m_sceneStack;
     QOpenGLContext *m_pContext = nullptr;
 
-    float m_x;
-    float m_y;
+    bool m_handleEvents = false;
 };

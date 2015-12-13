@@ -27,8 +27,9 @@ public:
 
     IMoveController * getCurrentMoveController();
     void swapMoveControllers();
-    void getKeyboardEvent(QKeyEvent *event, bool pressed);
-    void getMouseEvent(QMouseEvent *event, bool pressed);
+    void getKeyboardEvent(QKeyEvent *event);
+    void getMouseEvent(QMouseEvent *event);
+    void stopMoving();
 
 private:
     SceneCamera m_camera;

@@ -19,3 +19,8 @@ void FreeMoveController::transformLoadMatrix(QMatrix4x4 &matrix)
 {
 
 }
+
+void FreeMoveController::stopMoving()
+{
+
+}
