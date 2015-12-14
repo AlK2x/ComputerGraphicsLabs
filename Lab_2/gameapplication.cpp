@@ -19,6 +19,30 @@ int GameApplication::enterGameLoop()
     return exec();
 }
 
+void GameApplication::loadFromFile(QString filename)
+{
+    QString jsonString;
+    QFile file;
+    file.setFileName(filename);
+    if (!file.exists())
+    {
+        return;
+    }
+    bool result = file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!result)
+    {
+        return;
+    }
+
+    jsonString = file.readAll();
+    QJsonDocument json = QJsonDocument::fromJson(jsonString.toUtf8());
+    if (json.isNull())
+    {
+        return;
+    }
+
+}
+
 void GameApplication::loadScene()
 {
     disconnect(&m_window, SIGNAL(activeChanged()), this, SLOT(loadScene()));

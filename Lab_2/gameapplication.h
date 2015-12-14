@@ -1,5 +1,7 @@
  #pragma once
 #include <QGuiApplication>
+#include <QFile>
+#include <QJsonDocument>
 #include "ui/window3d.h"
 
 class GameApplication : public QGuiApplication
@@ -9,6 +11,8 @@ public:
     GameApplication(int argc, char *argv[]);
 
     int enterGameLoop();
+
+    void loadFromFile(QString filename);
 
 private slots:
     void loadScene();
