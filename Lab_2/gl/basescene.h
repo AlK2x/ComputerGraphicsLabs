@@ -26,12 +26,13 @@ public:
     SceneCamera const& camera() const;
 
     IMoveController * getCurrentMoveController();
-    void swapMoveControllers();
     void getKeyboardEvent(QKeyEvent *event);
     void getMouseEvent(QMouseEvent *event);
     void stopMoving();
 
 private:
+    void swapMoveControllers();
+
     SceneCamera m_camera;
     QColor m_clearColor;
     IMoveController *m_secondMoveController;

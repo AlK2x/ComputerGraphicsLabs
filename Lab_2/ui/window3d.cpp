@@ -10,7 +10,6 @@ Window3D::Window3D(QWindow *parent)
     : QWindow(parent)
 {
     setSurfaceType(QWindow::OpenGLSurface);
-    setFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
 }
 
 void Window3D::setFixedSize(QSize size)
@@ -63,11 +62,17 @@ void Window3D::mouseMoveEvent(QMouseEvent *event)
 
 void Window3D::mousePressEvent(QMouseEvent *event)
 {
+    (void)event;
     m_handleEvents = true;
+    if (!m_sceneStack.empty())
+    {
+        m_sceneStack.back()->getMouseEvent(event);
+    }
 }
 
 void Window3D::mouseReleaseEvent(QMouseEvent *event)
 {
+    (void)event;
     if (!m_sceneStack.empty() && m_handleEvents)
     {
         m_sceneStack.back()->stopMoving();
@@ -80,14 +85,7 @@ void Window3D::keyPressEvent(QKeyEvent *event)
     QWindow::keyPressEvent(event);
     if (!m_sceneStack.empty())
     {
-        if (event->key() == Qt::Key_Tab)
-        {
-            m_sceneStack.back()->swapMoveControllers();
-        }
-        else
-        {
-            m_sceneStack.back()->getKeyboardEvent(event);
-        }
+        m_sceneStack.back()->getKeyboardEvent(event);
     }
 }
 

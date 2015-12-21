@@ -7,12 +7,12 @@ FreeMoveController::FreeMoveController()
 
 void FreeMoveController::handleMouseEvent(QMouseEvent *event)
 {
-    qDebug() << 'Handle key event' << '\n';
+    qDebug() << 'handleMouseEvent() not implemented' << '\n';
 }
 
 void FreeMoveController::handleKeyboardEvent(QKeyEvent *event)
 {
-    qDebug() << 'Handle key event' << '\n';
+    qDebug() << 'handleKeyboardEvent() not implemented' << '\n';
 }
 
 void FreeMoveController::transformLoadMatrix(QMatrix4x4 &matrix)

@@ -19,12 +19,9 @@ public:
     void stopMoving();
 
 private:
-    QVector3D m_rotateVector;
     float m_angleX;
     float m_angleY;
-
-    int m_x;
-    int m_y;
+    QVector2D m_pos;
 };
 
 #endif // ROTATEMOVECONTROLLER_H

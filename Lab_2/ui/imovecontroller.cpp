@@ -15,7 +15,7 @@ void IMoveController::handleWheelEvent(QWheelEvent *event)
     {
         m_wheelFactor = (m_wheelFactor > 0.1) ? m_wheelFactor - 0.3 : m_wheelFactor;
     }
-    qDebug() << m_wheelFactor << '\n';
+    qDebug() << "m_wheelFactor = " << m_wheelFactor << '\n';
     event->accept();
 }
 

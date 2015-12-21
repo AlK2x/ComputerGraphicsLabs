@@ -103,7 +103,14 @@ void BaseScene::swapMoveControllers()
 
 void BaseScene::getKeyboardEvent(QKeyEvent *event)
 {
-    m_currentMoveController->handleKeyboardEvent(event);
+    if (event->key() == Qt::Key_Tab)
+    {
+        swapMoveControllers();
+    }
+    else
+    {
+        m_currentMoveController->handleKeyboardEvent(event);
+    }
 }
 
 void BaseScene::getMouseEvent(QMouseEvent *event)
